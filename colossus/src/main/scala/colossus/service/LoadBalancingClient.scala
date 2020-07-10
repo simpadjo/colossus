@@ -106,12 +106,12 @@ class LoadBalancingClient[P <: Protocol](
 
   private val clients = collection.mutable.ArrayBuffer[Client]()
 
-  private var permutations = new PrinciplePermutationGenerator(clients.map { _.client })
+  private var permutations = new PrinciplePermutationGenerator(clients.map { _.client }.toSeq)
 
   update(initialClients, true)
 
   private def regeneratePermutations() {
-    permutations = new PrinciplePermutationGenerator(clients.map { _.client })
+    permutations = new PrinciplePermutationGenerator(clients.map { _.client }.toSeq)
   }
 
   private def addClient(address: InetSocketAddress, regen: Boolean): Unit = {

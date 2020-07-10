@@ -160,7 +160,7 @@ class IOSystem private[colossus] (val name: String,
   }
 
   def registeredServers(implicit to: Timeout, ec: ExecutionContext): Future[Seq[ServerRef]] = {
-    (workerManager ? WorkerManager.ListRegisteredServers).mapTo[RegisteredServers].map(_.servers)
+    (workerManager ? WorkerManager.ListRegisteredServers).mapTo[RegisteredServers].map(_.servers.toSeq)
   }
 
   def connectionSummary(implicit to: Timeout, ec: ExecutionContext): Future[ConnectionSummary] = {

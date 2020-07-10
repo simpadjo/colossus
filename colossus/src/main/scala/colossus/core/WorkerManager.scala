@@ -273,7 +273,7 @@ private[colossus] object WorkerManager {
 
   case object ListRegisteredServers
 
-  case class RegisteredServers(servers: Seq[ServerRef])
+  case class RegisteredServers(servers: scala.collection.Seq[ServerRef])
 
   private[colossus] case class GatherConnectionInfo(requester: Option[ActorRef])
 

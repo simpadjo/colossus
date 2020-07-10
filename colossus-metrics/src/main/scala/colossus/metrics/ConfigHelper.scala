@@ -21,7 +21,7 @@ object ConfigHelpers {
 
     def getBoolOption(path: String): Option[Boolean] = getOption(path, config.getBoolean)
 
-    def getStringListOption(path: String): Option[Seq[String]] = getOption(path, config.getStringList).map(_.asScala)
+    def getStringListOption(path: String): Option[Seq[String]] = getOption(path, config.getStringList).map(_.asScala.toSeq)
 
     private def getOption[T](path: String, f: String => T): Option[T] = {
       if (config.hasPath(path)) {
@@ -32,7 +32,7 @@ object ConfigHelpers {
     }
 
     def getFiniteDurations(path: String): Seq[FiniteDuration] =
-      config.getStringList(path).asScala.map(finiteDurationOnly(_, path))
+      config.getStringList(path).asScala.map(finiteDurationOnly(_, path)).toSeq
 
     def getFiniteDuration(path: String): FiniteDuration = finiteDurationOnly(config.getString(path), path)
 

@@ -11,12 +11,12 @@ val MIMAPreviousVersions = Seq("0.11.1-RC1")
 
 lazy val testAll = TaskKey[Unit]("test-all")
 
-lazy val GeneralSettings = Seq[Setting[_]](
+lazy val GeneralSettings = scala.collection.Seq[Setting[_]](
   compile := (compile in Compile).dependsOn(compile in Test).dependsOn(compile in IntegrationTest).value,
   testAll := (test in Test).dependsOn(test in IntegrationTest).value,
   organization := "com.tumblr",
-  scalaVersion := "2.12.8",
-  crossScalaVersions := Seq("2.11.12", "2.12.8"),
+  scalaVersion := "2.13.3",
+  crossScalaVersions := Seq("2.13.3", "2.11.12"),
   apiURL := Some(url("https://www.javadoc.io/doc/")),
   parallelExecution in Test := false,
   scalacOptions := Seq(
@@ -25,8 +25,7 @@ lazy val GeneralSettings = Seq[Setting[_]](
     "-language:postfixOps",
     "-unchecked",
     "-deprecation",
-    "-target:jvm-1.8",
-    "-Ywarn-unused-import"
+    "-target:jvm-1.8"
   ),
   javacOptions ++= Seq("-source", "1.8", "-target", "1.8", "-Xlint"),
   scalacOptions in (Compile, console) := Seq(),
@@ -34,10 +33,17 @@ lazy val GeneralSettings = Seq[Setting[_]](
     "com.typesafe.akka"      %% "akka-actor"                  % AkkaVersion,
     "com.typesafe.akka"      %% "akka-testkit"                % AkkaVersion % "test",
     "org.scalatest"          %% "scalatest"                   % ScalatestVersion % "test, it",
-    "org.scalamock"          %% "scalamock-scalatest-support" % "3.6.0" % "test",
     "org.mockito"            %  "mockito-all"                 % "1.10.19" % "test",
     "org.slf4j"              %  "slf4j-api"                   % "1.7.26"
   ),
+  libraryDependencies ++= {
+    CrossVersion.partialVersion(scalaVersion.value) match {
+      case Some((2, scalaMajor)) if scalaMajor == 12 =>
+        ("org.scalamock" %% "scalamock-scalatest-support" % "3.6.0" % "test") :: Nil
+      case _ => Seq()
+    }
+  },
+
   coverageExcludedPackages := "colossus\\.examples\\..*;.*\\.testkit\\.*",
   credentials += Credentials("Sonatype Nexus Repository Manager",
     "oss.sonatype.org",
@@ -45,7 +51,7 @@ lazy val GeneralSettings = Seq[Setting[_]](
     sys.env.getOrElse("SONATYPE_PASSWORD", ""))
 ) ++ Defaults.itSettings
 
-lazy val publishSettings: Seq[Setting[_]] = Seq(
+lazy val publishSettings: scala.collection.Seq[Setting[_]] = Seq(
   publishMavenStyle := true,
   publishTo := Some(
     if (isSnapshot.value) {

@@ -647,7 +647,7 @@ object Combinators {
       if (data.remaining >= left) {
         data.skip(left)
         reset()
-        Some(Unit)
+        Some(())
       } else {
         left -= data.remaining
         data.skipAll
@@ -679,7 +679,7 @@ object Combinators {
     * `endOfStream()` is called.  The results from each call to the given parser
     * are accumulated and returned at the end of the stream.
     */
-  def repeatUntilEOS[T](parser: Parser[T]): Parser[Seq[T]] = new Parser[Seq[T]] {
+  def repeatUntilEOS[T](parser: Parser[T]): Parser[scala.collection.Seq[T]] = new Parser[scala.collection.Seq[T]] {
     var build = collection.mutable.ArrayBuffer[T]()
     def parse(data: DataBuffer) = {
       while (data.hasNext) {
